@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3386144840268221,
-      "y": 5.5
+      "x": 0.5309019562582962,
+      "y": 7.0050704681015805
     },
     "rotation": 0
   },
@@ -26,6 +26,12 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Shortmove1"
+                      }
+                    },
+                    {
                       "type": "named",
                       "data": {
                         "name": "ShootAuto"
@@ -34,7 +40,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Movetonote2"
+                        "pathName": "shortmove2"
                       }
                     },
                     {
@@ -52,61 +58,31 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "MoveToNote3"
+                        "pathName": "shortmove3"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
                         "name": "Intake"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "shortmove4"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
                         "name": "ShootAuto"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "MoveToNote4"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ShootAuto"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Finish"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake"
                       }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stopShooter"
           }
         }
       ]

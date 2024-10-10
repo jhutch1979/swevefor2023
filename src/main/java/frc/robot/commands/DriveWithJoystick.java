@@ -11,10 +11,12 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveWithJoystick extends Command {
   private Joystick m_Joystick;
+  private Joystick m_driverStationButtons;
   private DriveSubsystem m_chassis;
   /** Creates a new SriveWithJoystick. */
-  public DriveWithJoystick(Joystick joystick, DriveSubsystem chassis) {
+  public DriveWithJoystick(Joystick joystick, DriveSubsystem chassis, Joystick DriverStaionButtons) {
     m_Joystick = joystick;
+    m_driverStationButtons = DriverStaionButtons;
     m_chassis = chassis;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(chassis);
@@ -27,24 +29,27 @@ public class DriveWithJoystick extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double scale;// = -m_Joystick.getThrottle();
-    //scale += 1;
-    //scale *= 0.15;
-    scale = .5;
+    double scale = -m_Joystick.getRawAxis(2);// was getThrottle();
+    scale += 1;
+    scale *= 0.13;
+    scale += .75;
+    if (m_driverStationButtons.getRawButton(9)){
+      scale = .25;
+    }
     SmartDashboard.putNumber("speed scale", scale);
-    if(m_Joystick.getRawButton(2)){
+    if(m_Joystick.getRawButton(9)){
       m_chassis.driveWhilePickup(
-                    scale,
-                    -m_Joystick.getY());
-    } else if(m_Joystick.getRawButton(1)){
+                    .5,
+                    -m_Joystick.getRawAxis(1)*scale);
+    } else if(m_Joystick.getRawButton(2)){
       m_chassis.driveWhileShhoting(
-        scale, -m_Joystick.getY(), -m_Joystick.getX(),m_Joystick.getZ());
+        scale, -m_Joystick.getRawAxis(1)*scale, -m_Joystick.getRawAxis(0)*scale,-m_Joystick.getRawAxis(5)*scale);
     }else {
       m_chassis.drive(
       scale,
-                    -m_Joystick.getY()*scale,
-                    -m_Joystick.getX()*scale,
-                    -m_Joystick.getZ()*scale);
+                    -m_Joystick.getRawAxis(1)*scale,
+                    -m_Joystick.getRawAxis(0)*scale,
+                    -m_Joystick.getRawAxis(5)*scale);
     }
     
   }

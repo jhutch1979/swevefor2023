@@ -13,17 +13,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase {
   private static final CANSparkMax m_intakeMotor = new CANSparkMax(23, MotorType.kBrushless);
-  private static DigitalInput IsNoteIN;
+  private static DigitalInput IsNoteIN = new DigitalInput(0);
   /** Creates a new IntakeSubsystem. */
-  public IntakeSubsystem(DigitalInput noteSensor) {
+  public IntakeSubsystem() {
     m_intakeMotor.setInverted(false);
-    IsNoteIN = noteSensor;
+    
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("note in", IsNoteIN.get());
+    SmartDashboard.putBoolean("note in", getNoteSensor());
 
   }
 
@@ -36,5 +36,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void stop(){
     m_intakeMotor.set(0);
+  }
+
+  public boolean getNoteSensor(){
+   return IsNoteIN.get();
   }
 }

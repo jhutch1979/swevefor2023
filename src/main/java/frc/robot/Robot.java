@@ -7,7 +7,12 @@ package frc.robot;
 
 import com.revrobotics.REVPhysicsSim;
 
-
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,6 +27,11 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  private final PowerDistribution m_pdh = new PowerDistribution(1, ModuleType.kRev);
+  private static NetworkTable table;
+  NetworkTableEntry pipelineEntry;
+ 
+  
   
   
 
@@ -34,6 +44,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    table = NetworkTableInstance.getDefault().getTable("limelight-shooter");
+    pipelineEntry = table.getEntry("pipeline");
+    m_robotContainer.m_blinkin.changePattern(Constants.BlinkinColors.defaultBlinkinPattern);
    
     
   }
@@ -57,7 +70,12 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_pdh.setSwitchableChannel(true);
+    m_robotContainer.shooterSetAlliance();
+    m_robotContainer.m_blinkin.changePattern(Constants.BlinkinColors.defaultBlinkinPattern);
+   
+  }
 
   @Override
   public void disabledPeriodic() {}
@@ -65,6 +83,15 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    if (isRedAliance()){
+      m_robotContainer.m_blinkin.changePattern(Constants.BlinkinColors.redAliance);
+      pipelineEntry.setNumber(0);
+    } else {
+      m_robotContainer.m_blinkin.changePattern(Constants.BlinkinColors.blueAliance);
+      pipelineEntry.setNumber(1);
+    }
+    m_robotContainer.shooterSetAlliance();
+    m_pdh.setSwitchableChannel(false);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     
 
@@ -87,6 +114,17 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    if (isRedAliance()){
+      m_robotContainer.m_blinkin.changePattern(-0.31);
+      pipelineEntry.setNumber(0);
+    } else {
+      m_robotContainer.m_blinkin.changePattern(-0.29);
+      pipelineEntry.setNumber(1);
+    }
+    m_robotContainer.shooterSetAlliance();
+    m_pdh.setSwitchableChannel(false);
+    m_robotContainer.m_ShooterSubsystem.stop();
+    m_robotContainer.m_ShooterSubsystem.stopShooter();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -139,6 +177,15 @@ public class Robot extends TimedRobot {
   public void simulationPeriodic() {
     REVPhysicsSim.getInstance().run();
       
+  }
+
+  public boolean isRedAliance(){
+    var alliance = DriverStation.getAlliance();
+
+    if (alliance.isPresent()){
+      return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
   }
   
 }

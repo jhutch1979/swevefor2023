@@ -67,10 +67,10 @@ public final class Constants {
 
     public static final boolean kFrontLeftTurningMotorReversed = true;
     public static final boolean kRearLeftTurningMotorReversed = true;
-    public static final boolean kFrontRightTurningMotorReversed = true;
+    public static final boolean kFrontRightTurningMotorReversed = false;
     public static final boolean kRearRightTurningMotorReversed = true;
 
-    public static final boolean kFrontLeftDriveMotorReversed = true;
+    public static final boolean kFrontLeftDriveMotorReversed = false;
     public static final boolean kRearLeftDriveMotorReversed = true;
     public static final boolean kFrontRightDriveMotorReversed = true;
     public static final boolean kRearRightDriveMotorReversed = true;
@@ -126,7 +126,8 @@ public final class Constants {
   }
 
   public static final class ModuleConstants {
-    public static final double kMaxModuleAngularSpeedDegreesPerSecond = 540;
+    public static final double kMaxModuleAngularSpeedDegreesPerSecond = 720;
+    
     public static final double kMaxModuleAngularAccelerationDegreesPerSecondSquared = 720;
 
     public static final double kEncoderCPR = 1.085;
@@ -199,12 +200,28 @@ public final class Constants {
     
   }
   public static final class ShooterAnglePid{
-    public static double kP = 0.0005; 
-    public static double kI = .00000025;
+    public static double kP = 0.05; 
+    public static double kI = 0;
+    public static double kD = 0; 
+    public static double kIz = 0; 
+    public static double kFF = 0; 
+    public static double kMaxOutput = 0.25; 
+    public static double kMinOutput = -0.25;
+  }
+  public static final class ClimberHeightPid{
+    public static double kP = 0.05; 
+    public static double kI = 0;
     public static double kD = 0; 
     public static double kIz = 0; 
     public static double kFF = 0; 
     public static double kMaxOutput = 1; 
     public static double kMinOutput = -1;
+  }
+
+  public static final class BlinkinColors{
+    public static double defaultBlinkinPattern = -0.45;
+    public static double redAliance = -0.31;
+    public static double blueAliance = -0.29;
+    public static double noteIn = -0.07;
   }
 }

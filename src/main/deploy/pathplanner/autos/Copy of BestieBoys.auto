@@ -34,7 +34,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Movetonote2"
+                        "pathName": "Reverse1"
                       }
                     },
                     {
@@ -52,7 +52,31 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "MoveToNote3"
+                        "pathName": "reverse2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Intake"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Reverse3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShootAuto"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.25
                       }
                     },
                     {
@@ -70,25 +94,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "MoveToNote4"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Intake"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ShootAuto"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "Finish"
+                        "pathName": "Reverse4"
                       }
                     },
                     {

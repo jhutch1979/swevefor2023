@@ -62,15 +62,21 @@
                       }
                     },
                     {
+                      "type": "path",
+                      "data": {
+                        "pathName": "MoveToNote4"
+                      }
+                    },
+                    {
                       "type": "named",
                       "data": {
                         "name": "ShootAuto"
                       }
                     },
                     {
-                      "type": "path",
+                      "type": "wait",
                       "data": {
-                        "pathName": "MoveToNote4"
+                        "waitTime": 0.25
                       }
                     },
                     {

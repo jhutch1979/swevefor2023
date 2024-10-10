@@ -52,6 +52,7 @@ public class SwerveModule {
   private double AnalogEncoderOffset;
 
   private final SparkPIDController angleController;
+  private static boolean m_turningInverted;
   
 
   // Using a TrapezoidProfile PIDController to allow for smooth turning
@@ -91,7 +92,8 @@ public class SwerveModule {
 
         m_turningEncoder = m_turningMotor.getEncoder();
 
-        // Set the distance per pulse for the drive encoder. We can simply use the
+
+              // Set the distance per pulse for the drive encoder. We can simply use the
         // distance traveled for one rotation of the wheel divided by the encoder
         // resolution.
         m_driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderDistancePerPulse/60);
@@ -115,7 +117,9 @@ public class SwerveModule {
         // to be continuous.
         m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
         m_turningEncoder.setPositionConversionFactor(Constants.ModuleConstants.kTurningEncoderDistancePerPulse);
-        m_turningMotor.setInverted(turningMotorReversed);
+        //m_turningMotor.setInverted(turningMotorReversed);
+        m_turningInverted = turningMotorReversed;
+        System.out.println("Inverting " + m_name + "turning: " + turningMotorReversed);
         m_driveMotor.setIdleMode(IdleMode.kCoast);
         angleController = m_turningMotor.getPIDController();
 
@@ -126,6 +130,7 @@ public class SwerveModule {
   }
 
   private Rotation2d getAngle(){
+
     return Rotation2d.fromDegrees(m_turningEncoder.getPosition());
   }
   /**
@@ -171,7 +176,7 @@ public class SwerveModule {
     //if(Math.abs((m_turningEncoder.getPosition()) - state.angle.getDegrees())< 2 || Math.abs(driveOutput) < .25){
     //  turnOutput =0;
     //}else{
-    turnOutput = m_turningPIDController.calculate(m_turningEncoder.getPosition(),
+    turnOutput = m_turningPIDController.calculate(getAngle().getRadians(),
        state.angle.getRadians());
     //}
     // Calculate the turning motor output from the turning PID controller.
@@ -223,9 +228,11 @@ public class SwerveModule {
   public void update(){
     //SmartDashboard.putNumber(m_name + "lastAngle", lastAngle.getDegrees());
     //SmartDashboard.putNumber(m_name + "wheel angle", getAngle().getDegrees());
-    SmartDashboard.putBoolean("brake mode", isBrake);
-    //SmartDashboard.putNumber(m_name + "Raw Angle", getRawAbsoluteEncoder());
-    SmartDashboard.putNumber(m_name + " distance", m_driveEncoder.getPosition());
+    //SmartDashboard.putBoolean("brake mode", isBrake);
+    SmartDashboard.putNumber(m_name + "Raw Angle", getRawAbsoluteEncoder());
+    SmartDashboard.putNumber(m_name + "angle Angle", getAbsoluteEncoder());
+    SmartDashboard.putNumber(m_name, getAngle().getDegrees());
+    //SmartDashboard.putNumber(m_name + " distance", m_driveEncoder.getPosition());
   }
 
   public void switchBrake(){
@@ -245,7 +252,7 @@ public class SwerveModule {
     m_turningMotor.restoreFactoryDefaults();
     CANSparkMaxUtil.setCANSparkMaxBusUsage(m_turningMotor, Usage.kPositionOnly);
     m_turningMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
-    m_turningMotor.setInverted(Constants.Swerve.angleInvert);
+    m_turningMotor.setInverted(m_turningInverted);
     m_turningMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
     m_turningEncoder.setPositionConversionFactor(Constants.Swerve.angleConversionFactor);
     angleController.setP(Constants.Swerve.angleKP);

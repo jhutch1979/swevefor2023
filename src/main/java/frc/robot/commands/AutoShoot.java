@@ -5,7 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.subsystems.BlinkinSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -13,9 +18,9 @@ import frc.robot.subsystems.ShooterSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoShoot extends ParallelCommandGroup {
   /** Creates a new shootAuto. */
-  public AutoShoot(ShooterSubsystem shooter, FeederSubsystem feeder) {
+  public AutoShoot(DriveSubsystem drive, FeederSubsystem feeder, IntakeSubsystem intake, BlinkinSubsystem blinkin) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new shooterRunCommand(shooter).withTimeout(1),new AutoFeeder(feeder));
+    addCommands(new AutoDriveShoot(drive) , new AutoFeeder(feeder, intake, blinkin));
   }
 }

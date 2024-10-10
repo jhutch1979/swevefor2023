@@ -7,15 +7,17 @@ package frc.robot.commands;
 
 
 import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class intakeRunOutCommand extends Command {
   private IntakeSubsystem m_intake;
+  private BlinkinSubsystem m_blinkin;
   
   /** Creates a new intakeRunCom. */
-  public intakeRunOutCommand(IntakeSubsystem intake) {
+  public intakeRunOutCommand(IntakeSubsystem intake, BlinkinSubsystem blinkin) {
     m_intake = intake;
+    m_blinkin = blinkin;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
   }
@@ -36,6 +38,7 @@ public class intakeRunOutCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_intake.stop();
+    m_blinkin.setToAllianceColor();
   }
 
   // Returns true when the command should end.

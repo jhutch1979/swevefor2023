@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants;
 import frc.robot.Constants.DriveConstants;
@@ -73,7 +74,8 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
   private boolean feildOrientation = true;
-  private PIDController rotPid = new PIDController(.03, 0, 0);
+  private PIDController rotPid = new PIDController(.03, 0.0001, 0.00001);
+  private PIDController shootRotPid = new PIDController(.075, 0.0001, 0.00001);
   private NetworkTableInstance inst = NetworkTableInstance.getDefault();
   private NetworkTable table = inst.getTable("limelight");
   private NetworkTable shooterTable = inst.getTable("limelight-shooter");
@@ -107,15 +109,25 @@ public class DriveSubsystem extends SubsystemBase {
     ShooterHorizontalOfsetSub = shooterTable.getDoubleTopic("tx").subscribe(0.0);
     rotPid.setTolerance(1);
     rotPid.setIntegratorRange(-0.25,0.25);
+    shootRotPid.setIntegratorRange(-.75, .75);
     AutoBuilder.configureHolonomic(
       this::getPose, 
       this::resetPose, 
       this::getRobotRelativeSpeed, 
       this::driveRobotRelative, 
       Constants.DriveConstants.pathconfig, 
-      () -> { return false; }, 
+      this::isRedAliance, 
       this);
       //resetPose(new Pose2d(3, 7, new Rotation2d()));
+  }
+
+  public boolean isRedAliance(){
+    var alliance = DriverStation.getAlliance();
+
+    if (alliance.isPresent()){
+      return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
   }
 
   @Override
@@ -232,8 +244,9 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("tx", ShooterHorizontalOfsetSub.get());
     xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
     ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
-  
-    rot = rotPid.calculate(ShooterHorizontalOfsetSub.get(),0);
+    if (ShooterHorizontalOfsetSub.get() != 0){
+      rot = shootRotPid.calculate(ShooterHorizontalOfsetSub.get());
+    }
     var swerveModuleStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(
             feildOrientation

@@ -5,22 +5,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ClimberReverseCommand extends Command {
-  private static ClimberSubsystem m_climber;
-  /** Creates a new ClimberRunCommand. */
-  public ClimberReverseCommand(ClimberSubsystem climber) 
-  {
-    m_climber = climber;
+public class intakeTestCommand extends Command {
+  /** Creates a new intakeTestCommand. */
+  private static IntakeSubsystem m_intake;
+  public intakeTestCommand(IntakeSubsystem intakeSubsystem) {
+    m_intake = intakeSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_climber);
+    addRequirements(intakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_climber.reverse();
+    //m_intake.runIn();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -29,9 +28,7 @@ public class ClimberReverseCommand extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_climber.stop();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

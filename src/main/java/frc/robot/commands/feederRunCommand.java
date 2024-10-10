@@ -5,13 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.BlinkinColors;
+import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 public class feederRunCommand extends Command {
   private FeederSubsystem m_feeder;
+  private IntakeSubsystem m_intake;
+  private BlinkinSubsystem m_blinkin;
   /** Creates a new feederRunCommand. */
-  public feederRunCommand(FeederSubsystem feeder) {
+  public feederRunCommand(FeederSubsystem feeder, IntakeSubsystem intake, BlinkinSubsystem blinkin) {
     m_feeder = feeder;
+    m_intake = intake;
+    m_blinkin = blinkin;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(feeder);
     
@@ -31,6 +38,9 @@ public class feederRunCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_feeder.stop();
+    if (!m_intake.getNoteSensor()){
+      m_blinkin.setToAllianceColor();
+    }
   }
 
   // Returns true when the command should end.
